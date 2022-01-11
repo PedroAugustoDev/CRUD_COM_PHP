@@ -22,7 +22,7 @@ $listAll = $dao->findAll();
 
 <body>
   <main>
-    <form action="./form.php" method="POST" name="main_form" id="main_form">
+    <form action="../model/form.php" method="POST" name="main_form" id="main_form">
       <input name="Oage" class="form-control" type="number" placeholder="Idade" aria-label="default input example">
       <input name="Oname" class="form-control" type="text" placeholder="Nome" aria-label="default input example">
       <input name="Oemail" class="form-control" type="mail" placeholder="Email" aria-label="default input example">
@@ -34,124 +34,123 @@ $listAll = $dao->findAll();
   </main>
 
   <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle">Adicionar Locadidade</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeModal()">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-       <form action="./locate.php" method="POST">
-       <input name="number" class="form-control" type="number" placeholder="Número" aria-label="default input example">
-      <input name="address" class="form-control" type="text" placeholder="endereço" aria-label="default input example">
-      <input name="complemento" class="form-control" type="mail" placeholder="complemento" aria-label="default input example">
-      <input name="distrito" class="form-control cpf" type="text" placeholder="distrito" aria-label="default input example">
-      <input name="estado" class="form-control" type="text" placeholder="estado" aria-label="default input example">
-       </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Adicionar Locadidade</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeModal()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="location_form">
+            <input name="number" class="form-control" type="number" placeholder="Número" aria-label="default input example">
+            <input name="address" class="form-control" type="text" placeholder="endereço" aria-label="default input example">
+            <input name="complemento" class="form-control" type="mail" placeholder="complemento" aria-label="default input example">
+            <input name="distrito" class="form-control cpf" type="text" placeholder="distrito" aria-label="default input example">
+            <input name="estado" class="form-control" type="text" placeholder="estado" aria-label="default input example">
+            <input name="cidade" class="form-control" type="text" placeholder="cidade" aria-label="default input example">
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn save-btn btn-primary">Salvar</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
   <table class="table">
-  <thead>
-    <tr>
-      <th scope="col">ID</th>
-      <th scope="col">Idade</th>
-      <th scope="col">Nome</th>
-      <th scope="col">Email</th>
-      <th scope="col">Telefone</th>
-      <th scope="col">CPF</th>
-      <th scope="col">Data de nascimento</th>
-      <th scope="col">Excluir</th>
-      <th scope="col">Localização</th>
-    </tr>
-  </thead>
-  <?php
-  foreach($listAll as $user ){
-    echo "<tr>";
-      echo "<th scope='row'>{$user[0]}</th>";
-      echo "<td>{$user[1]}</td>";
-      echo "<td>{$user[2]}</td>";
-      echo "<td>{$user[3]}</td>";
-      echo "<td>{$user[4]}</td>";
-      echo "<td>{$user[5]}</td>";
-      echo "<td>{$user[6]}</td>";
+    <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Idade</th>
+        <th scope="col">Nome</th>
+        <th scope="col">Email</th>
+        <th scope="col">Telefone</th>
+        <th scope="col">CPF</th>
+        <th scope="col">Data de nascimento</th>
+        <th scope="col">Excluir</th>
+        <th scope="col">Localização</th>
+      </tr>
+    </thead>
+    <?php
+    foreach ($listAll as $user) {
+      echo "<tr>";
+      echo "<th scope='row'>{$user->getId()}</th>";
+      echo "<td>{$user->getOld()}</td>";
+      echo "<td>{$user->getOname()}</td>";
+      echo "<td>{$user->getOemail()}</td>";
+      echo "<td>{$user->getOphone()}</td>";
+      echo "<td>{$user->getOdocument()}</td>";
+      echo "<td>{$user->getObirth_day()}</td>";
       echo "<td>
-            <button class='btn btn-danger' onclick='deleteUser({$user[0]})'>
+            <button class='btn btn-danger' onclick='deleteUser({$user->getId()})'>
               <i class='fa fa-trash' aria-hidden='true'></i>
             </button>
             </td>";
-            echo "<td>
+      echo "<td>
             <button type='button' class='btn btn-success'  data-toggle='modal' ata-target='#exampleModalCenter' 
-            onclick=addLocation({$user[0]})>
+            onclick=addLocation({$user->getId()})>
             <i class='fa fa-plus' aria-hidden='true'></i>
             </button>
             </td>";
-    echo "</tr>";
-  }
-  ?>
+      echo "</tr>";
+    }
+    ?>
   </table>
   <script>
+    function closeModal() {
+      $('#exampleModalCenter').modal('hide');
+    }
 
-    function closeModal(){ $('#exampleModalCenter').modal('hide'); }
-    function addLocation(id){ $('#exampleModalCenter').modal('show'); }
-
-    $(function(){
-      var $formRegister = document.forms.main_form;
-      if($formRegister.length){
-        $formRegister.validate({
-          rules: {
-            'Oage': {
-              require: true
-            },
-            'Oname': {
-              require: true
-            },
-            'Oemail': {
-              require: true
-            },
-            'Ophone': {
-              require: true
-            },
-            'Odocument': {
-              require: true
-            },
-            'Obirth_day': {
-              require: true
-            }
-          }
-        })
-      }
-    })
-     
-   
-    function submit(e) {
-      e.preventDefault();
-      $.ajax({
-          url: `./form.php`,
-          method: 'POST',
-          data: $("#main_form").serialize(),
-          type: "GET",
+    function addLocation(id) {
+      $('#exampleModalCenter').modal('show');
+      const saveBtn = document.querySelector('.save-btn');
+      saveBtn.addEventListener('click', () => {
+        const data = getFormData($("#location_form"));
+        sumbitLocation(id, data);
+        closeModal();
       })
     }
 
-    function deleteUser(id){
-      $(event.composedPath()[2]).fadeOut("slow", ()=> alert("excluindo"));
+    function submit() {
       $.ajax({
-          url: `../controller/controller.php?id=${id}`,
-          method: 'DELETE',
-          type: "GET",
-        })
+        url: `./form.php`,
+        method: 'POST',
+        data: $("#main_form").serialize(),
+        type: "POST",
+      })
     }
-   
-   
+
+    function sumbitLocation(id, data) {
+      window.open(`../controller/addressController.php?id=${id}&body=${JSON.stringify(data)}`);
+      $.ajax({
+        url: `../controller/addressController.php?id=${id}`,
+        data: {rel:data},
+        dataType: 'json',
+        type: "POST",
+      })
+    }
+
+    function getFormData($form) {
+      var unindexed_array = $form.serializeArray();
+      var indexed_array = {};
+
+      $.map(unindexed_array, function(n, i) {
+        indexed_array[n['name']] = n['value'];
+      });
+
+      return indexed_array;
+    }
+
+    function deleteUser(id) {
+      $(event.composedPath()[2]).fadeOut("slow", () => alert("excluindo"));
+      $.ajax({
+        url: `../controller/controller.php?id=${id}`,
+        method: 'DELETE',
+        type: "GET",
+      })
+    }
   </script>
 </body>
 

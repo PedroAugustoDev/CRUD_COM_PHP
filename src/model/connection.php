@@ -11,8 +11,8 @@
         $pdo = new PDO("mysql:host=$this->SERVER_NAME;dbname=$this->DATABASE_NAME;", $this->USERNAME, $this->PASSWORD);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $this->connection = $pdo;
-      } catch (\Throwable $th) {
-        echo "erro ao conectar com o banco de dados...";
+      } catch (PDOException $th) {
+        die("error in connection with database... /erro ao conectar com o banco");
       }
   
     } 

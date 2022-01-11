@@ -12,7 +12,6 @@ class User
     public string $Odocument,
     public string $Obirth_day
   ) {
-    
   }
 
   public function getOld()
@@ -86,6 +85,10 @@ class User
   public function getId()
   {
     return $this->id;
+  }
+
+  public function setId($var){
+    $this->id = $var;
   }
 
 }

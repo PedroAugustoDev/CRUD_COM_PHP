@@ -4,6 +4,7 @@
 
 class UserAddress
 {
+  public int $id;
   public function __construct(
     public string $OAddress,
     public int $Onumber,
