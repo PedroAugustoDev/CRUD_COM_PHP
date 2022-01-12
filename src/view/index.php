@@ -1,8 +1,12 @@
 <?php
 require_once("../model/user.php");
 include('../model/DAOUser.php');
+include('../model/DAOAddress.php');
 $dao = new DAOUser();
+$dao_two = new DAOAddress();
 $listAll = $dao->findAll();
+$listAddress = $dao_two->findAll();
+
 ?>
 
 <!DOCTYPE html>
@@ -29,7 +33,7 @@ $listAll = $dao->findAll();
       <input name="Ophone" class="form-control" type="text" placeholder="telefone" aria-label="default input example">
       <input name="Odocument" class="form-control cpf" type="text" placeholder="documento (CPF)" aria-label="default input example">
       <input name="Obirth_day" class="form-control" type="text" placeholder="data de aniversário " aria-label="default input example">
-      <button type="button" class="btn btn-primary" onclick="submit()">Enviar</button>
+      <button type="submit" class="btn btn-primary">Enviar</button>
     </form>
   </main>
 
@@ -43,13 +47,14 @@ $listAll = $dao->findAll();
           </button>
         </div>
         <div class="modal-body">
-          <form id="location_form">
+          <form action="../controller/addressController.php" method="POST" id="location_form">
             <input name="number" class="form-control" type="number" placeholder="Número" aria-label="default input example">
             <input name="address" class="form-control" type="text" placeholder="endereço" aria-label="default input example">
             <input name="complemento" class="form-control" type="mail" placeholder="complemento" aria-label="default input example">
-            <input name="distrito" class="form-control cpf" type="text" placeholder="distrito" aria-label="default input example">
+            <input name="distrito" class="form-control " type="text" placeholder="distrito" aria-label="default input example">
             <input name="estado" class="form-control" type="text" placeholder="estado" aria-label="default input example">
             <input name="cidade" class="form-control" type="text" placeholder="cidade" aria-label="default input example">
+            <input name="fk_id" hidden value="0" class="fk_user">
           </form>
         </div>
         <div class="modal-footer">
@@ -98,49 +103,48 @@ $listAll = $dao->findAll();
     }
     ?>
   </table>
+  <h1>Endereços</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">ID do Usuário</th>
+        <th scope="col">endereço</th>
+        <th scope="col">cidade</th>
+        <th scope="col">estado</th>
+        <th scope="col">distrito</th>
+        <th scope="col">número</th>
+        <th scope="col">Complemento</th>
+      </tr>
+    </thead>
+    <?php
+    foreach ($listAddress as $address) {
+      echo "<tr>";
+      echo "<th scope='row'>{$address->id}</th>";
+      echo "<td>{$address->pk}</td>";
+      echo "<td>{$address->OAddress}</td>";
+      echo "<td>{$address->Ocity}</td>";
+      echo "<td>{$address->Ostate}</td>";
+      echo "<td>{$address->Odistrict}</td>";
+      echo "<td>{$address->Onumber}</td>";
+      echo "<td>{$address->Ocomplement}</td>";
+    }
+    ?>
+  </table>
   <script>
+
+    function addLocation( id ){
+      $('#exampleModalCenter').modal('show');
+      const btnSave = document.querySelector(".save-btn");
+      const inputFK = document.querySelector('.fk_user');
+      inputFK.value = id;
+      btnSave.addEventListener('click', ()=> {
+        $("#location_form").submit();
+      })
+    }
+
     function closeModal() {
       $('#exampleModalCenter').modal('hide');
-    }
-
-    function addLocation(id) {
-      $('#exampleModalCenter').modal('show');
-      const saveBtn = document.querySelector('.save-btn');
-      saveBtn.addEventListener('click', () => {
-        const data = getFormData($("#location_form"));
-        sumbitLocation(id, data);
-        closeModal();
-      })
-    }
-
-    function submit() {
-      $.ajax({
-        url: `./form.php`,
-        method: 'POST',
-        data: $("#main_form").serialize(),
-        type: "POST",
-      })
-    }
-
-    function sumbitLocation(id, data) {
-      window.open(`../controller/addressController.php?id=${id}&body=${JSON.stringify(data)}`);
-      $.ajax({
-        url: `../controller/addressController.php?id=${id}`,
-        data: {rel:data},
-        dataType: 'json',
-        type: "POST",
-      })
-    }
-
-    function getFormData($form) {
-      var unindexed_array = $form.serializeArray();
-      var indexed_array = {};
-
-      $.map(unindexed_array, function(n, i) {
-        indexed_array[n['name']] = n['value'];
-      });
-
-      return indexed_array;
     }
 
     function deleteUser(id) {

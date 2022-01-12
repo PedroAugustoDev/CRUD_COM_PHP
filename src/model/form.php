@@ -18,7 +18,6 @@
       if(empty($data) || $data == null || trim(strlen($data)) == 1) return false;
     
     if(!validateMail($vars[2])) return false; //validar email
-    if(strlen($vars[4]) <= 10) return false; //validar cpf por tamanho
     return true;
   }
 
@@ -31,7 +30,5 @@
     $user = new User($age, $name, $mail, $phone, $doc, $date);
     $var->insert($user);
   }
-
   header('location: ../view/index.php');
-
 ?>

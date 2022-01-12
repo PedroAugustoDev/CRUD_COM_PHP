@@ -33,6 +33,7 @@ class DAOUser extends Database
     return $user_list;
   }
 
+
   //demosntar a classe user para um array
   private function userToArray( $user ){
     $arrayobj = new ArrayObject($user);

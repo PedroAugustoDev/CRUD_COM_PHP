@@ -11,10 +11,6 @@ create table user(
     Obirth_day date not null
 );
 
-
-drop table if exists `user_address`;
-drop table user;
-
 create table user_address(
 	id_address int  not null auto_increment,
     user_id int unique,
@@ -22,8 +18,8 @@ create table user_address(
     Ocity varchar(100) not null,
 	Ostate varchar(100) not null,
     Odistrict varchar(100) not null,
-    Odocument varchar(100) not null,
     Onumber int not null,
+    complemento varchar(200) not null,
      CONSTRAINT fk_UserAddress FOREIGN KEY (user_id) REFERENCES user (id),
     primary key(id_address)
 );

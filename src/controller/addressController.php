@@ -1,18 +1,17 @@
 <?php 
-  include('../model/UserAddress.php');
+  include_once('../model/DAOAddress.php');
   header('Cache-Control: no-cache, must-revalidate'); 
   header('Content-Type: application/json; charset=utf-8');
-  $aDados = json_decode($_GET['body'], true); 
 
-  $address = ($aDados['address'] != '' ? $aDados['address'] : null);
-  $num = ($aDados['number'] != '' ? $aDados['number'] : null);
-  $comp = ($aDados['complemento'] != '' ? $aDados['complemento'] : null);
-  $dis = ($aDados['distrito'] != '' ? $aDados['distrito'] : null);
-  $est = ($aDados['estado'] != '' ? $aDados['estado'] : null);
-  $city = ($aDados['cidade'] != '' ? $aDados['cidade'] : null);
-  $fk_user = ($_GET['id'] != '' ? $_GET['id'] : null);
+  $address = ($_POST['address'] != '' ? $_POST['address'] : null);
+  $num = ($_POST['number'] != '' ? $_POST['number'] : null);
+  $comp = ($_POST['complemento'] != '' ? $_POST['complemento'] : null);
+  $dis = ($_POST['distrito'] != '' ? $_POST['distrito'] : null);
+  $est = ($_POST['estado'] != '' ? $_POST['estado'] : null);
+  $city = ($_POST['cidade'] != '' ? $_POST['cidade'] : null);
+  $fk_user = ($_POST['fk_id'] != '' ? $_POST['fk_id'] : null);
+
   
-
   $dates = [$address, $num, $comp, $dis, $est];
   function validate(array $arrayInfos )
   {
@@ -26,10 +25,10 @@
   }
 
   if(validate($dates)){
-    $address = new UserAddress($address, $num, $comp, $dis, $city, $est);
-
-  }
-  
-
+    $address = new UserAddress($fk_user, $address, $city, $est, $dis, $num, $comp );
+    $var = new DAOAddress();
+    $var->insert($address);
+    header('location: ../view/index.php');
+  } else echo "Ocorreu um erro";
 
 ?>
